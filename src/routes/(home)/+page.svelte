@@ -1,13 +1,8 @@
 <script lang="ts">
+	import { Post } from '$lib';
 	import { onMount } from 'svelte';
 
 	export let data;
-
-	class Post {
-		title: string = '';
-		description?: string;
-		cover?: string;
-	}
 	let newPost = new Post();
 
 	onMount(() => {
@@ -15,7 +10,7 @@
 	});
 </script>
 
-<div class="bg-light text-dark p-3 rounded">
+<div class="bg-light text-dark p-3 rounded mb-3">
 	<div class="d-flex align-items-center justify-content-between mb-3">
 		<h4 class="mb-0">Новая публикация</h4>
 		<button class="btn btn-dark text-light">Создать</button>
@@ -30,4 +25,11 @@
 			<div class="w-25 rounded" style="height: 11em; background:url({newPost.cover}) center; backdrop-size:cover"></div>
 		{/if}
 	</div>
+</div>
+
+<div class="bg-light text-dark p-3 rounded">
+	<h4>Список публикаций</h4>
+	{#each data.posts as [key, post], i (key)}
+		<div id={key}>{post.title}</div>
+	{/each}
 </div>
