@@ -5,7 +5,9 @@
 
 	export let data;
 	//let posts = [] as [string, Post][];
-	let { posts } = data;
+	let posts: [string, Post][] = data.posts;
+	let search: string = '';
+	let searchPosts = posts;
 	let newPost = new Post();
 
 	onMount(async () => {
@@ -38,14 +40,26 @@
 </div>
 
 <div class="bg-light text-dark p-3 rounded mb-3">
+	<input
+		class="form-control"
+		bind:value={search}
+		placeholder="Строка поиска"
+		on:input={() => {
+			searchPosts = posts.filter(post => post[1].title.toLowerCase().includes(search.toLowerCase()));
+			console.log(searchPosts);
+		}}
+	/>
+</div>
+
+<div class="bg-light text-dark p-3 rounded mb-3">
 	<h4>Список публикаций</h4>
-	{#each posts as [key, post], i (key)}
+	{#each searchPosts as [key, post], i (key)}
 		<div id={key}>{i + 1}. {post.title}</div>
 	{/each}
 </div>
 
 <div class="row row-cols-1 row-cols-md-3 g-4">
-	{#each posts as [key, post], i}
+	{#each searchPosts as [key, post], i}
 		<div class="col">
 			<div class="d-flex flex-column bg-light text-dark rounded h-100">
 				<div class="p-3 flex-grow-1">
