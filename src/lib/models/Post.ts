@@ -1,7 +1,7 @@
 export class Post {
 	title: string = '';
-	description?: string;
-	cover?: string;
+	description: string | null = null;
+	cover: string | null = null;
 }
 
 export interface IDictionary<T> {

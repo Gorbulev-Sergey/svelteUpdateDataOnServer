@@ -13,5 +13,5 @@ export async function getData(path: string): Promise<Map<string, Post>> {
 }
 
 export function addData<T>(path: string, data: T) {
-	push(ref(db, path), data);
+	push(ref(db, path), data).then(() => {});
 }

@@ -1,8 +1,7 @@
-import type { IDictionary, Post } from '$lib';
-import { getData } from '$lib/server/database';
-
-export async function load() {
+export async function load({ fetch }) {
+	const response = await fetch('/api/posts');
+	const posts = await response.json();
 	return {
-		posts: (await getData('/posts')) as Map<string, Post>
+		posts: posts
 	};
 }
