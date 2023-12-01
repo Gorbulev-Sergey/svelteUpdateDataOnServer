@@ -8,7 +8,11 @@
 
 	let posts: [string, classPost][] = new Array();
 	let search: string = '';
-	let searchPosts: [string, classPost][] = new Array();
+	let isNewPostFirst = true;
+	$: searchPosts = posts.filter(post => post[1].title.toLowerCase().includes(search.toLowerCase()));
+	$: sortedPostsbyDate = isNewPostFirst
+		? searchPosts.sort((v1, v2) => new Date(v2[1].date).getTime() - new Date(v1[1].date).getTime())
+		: searchPosts.sort((v1, v2) => new Date(v1[1].date).getTime() - new Date(v2[1].date).getTime());
 	let newPost = new classPost();
 
 	onMount(async () => {
@@ -44,21 +48,19 @@
 </div>
 
 <div class="bg-light text-dark p-3 rounded mb-3 shadow-sm input-group">
-	<input
-		class="form-control"
-		bind:value={search}
-		placeholder="Строка поиска"
-		on:input={() => {
-			searchPosts = posts.filter(post => post[1].title.toLowerCase().includes(search.toLowerCase()));
-			console.log(searchPosts);
-		}}
-	/>
-	<button class="btn btn-outline-dark" on:click={() => (search = '')}>Очистить</button>
+	<input class="form-control" bind:value={search} placeholder="Строка поиска" />
+	<button class="btn btn-light border-dark-subtle" on:click={() => (search = '')}><i class="fa-solid fa-xmark"></i></button>
 </div>
+
+<div class="bg-light text-dark p-3 rounded mb-3 shadow-sm">
+	<h4>Фильтры:</h4>
+	<button class="btn btn-light border-dark-subtle" on:click={() => (isNewPostFirst = !isNewPostFirst)}>{isNewPostFirst ? 'Сначала новые' : 'Сначала старые'}</button>
+</div>
+
 <div class="bg-light text-dark p-3 rounded mb-3 shadow-sm">
 	<h4>Список публикаций</h4>
 	<div class="d-flex flex-column gap-1">
-		{#each searchPosts as [key, post], i (key)}
+		{#each sortedPostsbyDate as [key, post], i (key)}
 			<div class="d-flex align-items-center justify-content-between">
 				<div id={key}>{i + 1}. {post.title}</div>
 				<button
@@ -75,7 +77,7 @@
 </div>
 
 <div class="row row-cols-1 row-cols-md-3 g-4">
-	{#each searchPosts as [key, post], i}
+	{#each sortedPostsbyDate as [key, post], i}
 		<div class="col">
 			<Post post={[key, post]} />
 		</div>
