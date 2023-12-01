@@ -3,13 +3,11 @@ import { db } from '$lib/scripts/firebase';
 import { onValue, get, push, ref, update, remove } from 'firebase/database';
 
 export async function getPosts(): Promise<[string, Post][]> {
-	let posts: [string, Post][] = new Array();
-	posts = await new Promise(res => {
-		get(ref(db, '/posts')).then(s => {
-			res(Object.entries(s.val()));
+	return new Promise(res => {
+		onValue(ref(db, '/posts'), s => {
+			if (s.exists()) res(Object.entries(s.val()));
 		});
 	});
-	return posts;
 }
 
 export async function getPost(id: string): Promise<[string, Post]> {
