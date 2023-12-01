@@ -54,7 +54,7 @@
 
 <div class="bg-light text-dark p-3 rounded mb-3 shadow-sm">
 	<h4>Фильтры:</h4>
-	<button class="btn btn-light border-dark-subtle" on:click={() => (isNewPostFirst = !isNewPostFirst)}>{isNewPostFirst ? 'Сначала новые' : 'Сначала старые'}</button>
+	<button class="btn btn-sm btn-dark border-dark-subtle" on:click={() => (isNewPostFirst = !isNewPostFirst)}>{isNewPostFirst ? 'Сначала новые' : 'Сначала старые'}</button>
 </div>
 
 <div class="bg-light text-dark p-3 rounded mb-3 shadow-sm">
@@ -62,7 +62,7 @@
 	<div class="d-flex flex-column gap-1">
 		{#each sortedPostsbyDate as [key, post], i (key)}
 			<div class="d-flex align-items-center justify-content-between">
-				<div id={key}>{i + 1}. {post.title}</div>
+				<div id={key}>{isNewPostFirst ? sortedPostsbyDate.length - i : i + 1}. {post.title}</div>
 				<button
 					class="btn btn-sm btn-dark text-light"
 					on:click={async () => {
