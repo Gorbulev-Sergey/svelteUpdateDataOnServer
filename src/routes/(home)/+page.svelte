@@ -7,17 +7,27 @@
 	import { db } from '$lib/scripts/firebase';
 
 	let newPost = new classPost();
+	/*Строка поиска*/
 	let search: string = '';
+	/*Переключатель сортировки постов по дате (снаяала новые/или старые)*/
 	let isNewPostFirst = true;
+	/*Количество колонок для постов*/
 	let countPostsColumns = 3;
+	/*Количество постов на каждой странице*/
+	let countPostsOnPage = 2;
+	$: getPagesCount = () => {
+		return Math.round(posts.length / countPostsOnPage);
+	};
 	/*Изначальный массив постов*/
 	let posts: [string, classPost][] = new Array();
-	/*Массив постов, отфильтрованных по строке поиска*/
+	/*1-ый фильтр) Массив постов, отфильтрованных по строке поиска*/
 	$: searchPosts = posts.filter(post => post[1].title.toLowerCase().includes(search.toLowerCase()));
-	/*Массив постов, отфильтрованных по строке поиска и дате*/
+	/*2-ой фильтр) Массив постов, отфильтрованных по строке поиска и дате*/
 	$: sortedPostsbyDate = isNewPostFirst
 		? searchPosts.sort((v1, v2) => new Date(v2[1].date).getTime() - new Date(v1[1].date).getTime())
 		: searchPosts.sort((v1, v2) => new Date(v1[1].date).getTime() - new Date(v2[1].date).getTime());
+	/*3-ий фильтр) Вывод постов в зависимости от переключателя количества постов на странице*/
+	$: postsByCountOnPage = sortedPostsbyDate.slice(0, countPostsOnPage);
 
 	let isListPostsHide = true;
 
@@ -77,6 +87,18 @@
 				</button>
 			</div>
 		</div>
+		<div class="d-flex align-items-center gap-1">
+			<div class="small">постов на странице:</div>
+			<div class="btn-group btn-group-sm">
+				<button class="btn btn-dark" on:click={() => (countPostsOnPage = countPostsOnPage > 1 ? countPostsOnPage - 1 : countPostsOnPage)}>
+					<i class="fa-solid fa-angle-down"></i>
+				</button>
+				<div class="btn btn-dark bg-dark border-dark">{countPostsOnPage}</div>
+				<button class="btn btn-dark" on:click={() => (countPostsOnPage = countPostsOnPage < 10 ? countPostsOnPage + 1 : countPostsOnPage)}>
+					<i class="fa-solid fa-angle-up"></i>
+				</button>
+			</div>
+		</div>
 	</div>
 </div>
 
@@ -103,7 +125,7 @@
 </div>
 
 <div class="row row-cols-1 row-cols-md-{countPostsColumns} g-4">
-	{#each sortedPostsbyDate as [uid, post], i}
+	{#each postsByCountOnPage as [uid, post], i}
 		<div class="col">
 			<Post {uid} {post} />
 		</div>
