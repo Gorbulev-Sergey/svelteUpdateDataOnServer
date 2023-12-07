@@ -22,5 +22,5 @@
 		<div>{post.description}</div>
 	</div>
 	<div class="shadow-sm" style="height: 10em; background: url({post.cover}) center; backgroundSize: cover"></div>
-	<i class="px-3 py-2 text-info-emphasis" style="font-size:.8em">{new Date(post.date).toLocaleDateString('ru-Ru', { year: 'numeric', month: 'long', day: 'numeric' })}</i>
+	<div class="px-3 py-2 text-info-emphasis" style="font-size:.8em">{new Date(post.date).toLocaleDateString('ru-Ru', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
 </div>
